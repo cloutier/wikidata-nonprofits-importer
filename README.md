@@ -1,5 +1,9 @@
 This is a project to import data about charities from governments around the world into Wikidata. 
 
+These are the importers currently working:
+
+- IRS pub 78 (US)
+
 
 # Useful links
 
