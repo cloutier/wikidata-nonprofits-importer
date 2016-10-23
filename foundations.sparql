@@ -1,0 +1,12 @@
+SELECT ?foundation ?fondationTaxCode ?foundationLabel ?foundationTwitter ?logo ?field ?image
+WHERE 
+{
+	?foundation wdt:P31 wd:Q163740 .
+  	?foundation wdt:P1297 ?fondationTaxCode
+  	OPTIONAL { ?foundation wdt:P2002 ?foundationTwitter }
+  	OPTIONAL { ?foundation wdt:P154 ?logo }
+    OPTIONAL { ?foundation wdt:P101 ?field }
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "en,fr" . }
+}
+
+LIMIT 10000
