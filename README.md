@@ -4,10 +4,14 @@ These are the importers currently working:
 
 - IRS pub 78 (US)
 
+There is a [SPARQL query](https://github.com/cloutier/wikidata-nonprofits-importer/blob/master/foundations.sparql) to see what data is currently there on wikidata.
+
 
 # Useful links
 
 [Creating a bot](https://www.wikidata.org/wiki/Wikidata:Creating_a_bot)
+
+[Flood rights](https://www.wikidata.org/wiki/Wikidata:Flooders)
 
 
 https://www.wikidata.org/wiki/Property:P1297
