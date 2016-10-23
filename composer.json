@@ -1,4 +1,15 @@
 {
+    "description": "Imports data from governements around the world into wikidata",
+    "keywords": ["nonprofits","wikidata"],
+    "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name": "Vincent Cloutier",
+            "email": "vincent@cloutier.co",
+            "homepage": "http://vincent.cloutier.co",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "jeroen/json-dump-reader": "~1.0",
         "addwiki/wikibase-api": "dev-master"
