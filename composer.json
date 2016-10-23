@@ -1,0 +1,6 @@
+{
+    "require": {
+        "jeroen/json-dump-reader": "~1.0",
+        "addwiki/wikibase-api": "dev-master"
+    }
+}
