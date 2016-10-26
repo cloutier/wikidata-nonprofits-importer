@@ -26,6 +26,14 @@ class Wikidata {
 		$this->data = json_decode($constructData, true);
 	}
 
+	public function id() {
+		if (isset($this->data['id'])) {
+			return $this->data['id'];
+		} else {
+			return "";
+		}
+	}
+
 	public function name($lang = "en") {
 		if (isset($this->data['labels'][$lang])) {
 			return $this->data['labels'][$lang]['value'];
