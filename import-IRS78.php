@@ -15,6 +15,10 @@ $dumpReader = $factory->newExtractedDumpReader( '/mnt/data/wikidata-20160926-unc
 $dumpIterator = $factory->newStringDumpIterator( $dumpReader );
 $api = new \Mediawiki\Api\MediawikiApi( "https://www.wikidata.org/w/api.php" );
 $api->login( new \Mediawiki\Api\ApiUser( $wikiUser, $wikiPassword ) );
+$dataValueClasses = array(
+    'unknown' => 'DataValues\UnknownValue',
+    'string' => 'DataValues\StringValue',
+);
 $wbFactory = new \Wikibase\Api\WikibaseFactory(
     $api,
     new DataValues\Deserializers\DataValueDeserializer( $dataValueClasses ),
@@ -72,17 +76,20 @@ foreach ( $dumpIterator as $jsonLine ) {
 			     || strtolower($line->name()) . " foundation inc." == strtolower($ans['name'])) {
 					echo "Perfect match \n";
 
-                    #importing it into wikidata
-                    echo "Adding '" . $ans['gov_id'] . "' to the entity '". $line->name() ."' \n";
-/*
-                    $wbFactory->newStatementCreator()->create(
-                        new PropertyValueSnak(
-                            PropertyId::newFromNumber( 1297 ),
-                            new StringValue( '04-2888848' )
-                        ),
-                        'Q13406268'
-                    );
-*/
+			    #importing it into wikidata
+			if ($wbFactory->newRevisionGetter()->getFromId("Q123")->getContent()->getData()->getStatements()->getByPropertyId( PropertyId::newFromNumber( 1297 ) )->isEmpty()) {
+
+			    echo "Adding '" . $ans['gov_id'] . "' to the entity '". $line->name() ."' \n";
+	/*
+			    $wbFactory->newStatementCreator()->create(
+				new PropertyValueSnak(
+				    PropertyId::newFromNumber( 1297 ),
+				    new StringValue( '04-2888848' )
+				),
+				'Q13406268'
+			    );
+	*/
+			}
 			} else if (sizeof($res) == 1)  {
 					echo "Bad match \n ";
 			}
