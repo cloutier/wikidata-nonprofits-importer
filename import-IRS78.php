@@ -41,7 +41,7 @@ if (!file_exists("/mnt/data/wikidata-20160926-uncompressed.json")) {
 foreach ( $dumpIterator as $jsonLine ) {
 	$line = new Wikidata($jsonLine);
 	if ($line->isInstanceOf(Array ("708676", "18325436", "163740")) and $line->name() != "") {
-		$req = $db->prepare("SELECT name FROM foundations WHERE foundations.name LIKE :name LIMIT 30;");
+		$req = $db->prepare("SELECT name, gov_id FROM foundations WHERE foundations.name LIKE :name LIMIT 30;");
 		$tmp = $line->name() . " %";
 		$req->bindParam(":name", $tmp);
 		$req->execute();
@@ -77,18 +77,17 @@ foreach ( $dumpIterator as $jsonLine ) {
 					echo "Perfect match \n";
 
 			    #importing it into wikidata
-			if ($wbFactory->newRevisionGetter()->getFromId("Q123")->getContent()->getData()->getStatements()->getByPropertyId( PropertyId::newFromNumber( 1297 ) )->isEmpty()) {
+			if ($wbFactory->newRevisionGetter()->getFromId($line->id())->getContent()->getData()->getStatements()->getByPropertyId( PropertyId::newFromNumber( 1297 ) )->isEmpty()) {
 
-			    echo "Adding '" . $ans['gov_id'] . "' to the entity '". $line->name() ."' \n";
-	/*
+			    $gov_id = substr($ans['gov_id'], 3, 2) . "-" . substr($ans['gov_id'], -7);
+			    echo "Adding '" . $gov_id . "' to the entity '". $line->name() ."' \n";
 			    $wbFactory->newStatementCreator()->create(
 				new PropertyValueSnak(
 				    PropertyId::newFromNumber( 1297 ),
-				    new StringValue( '04-2888848' )
+				    new StringValue( $gov_id )
 				),
-				'Q13406268'
+				$line->id()
 			    );
-	*/
 			}
 			} else if (sizeof($res) == 1)  {
 					echo "Bad match \n ";
