@@ -77,18 +77,19 @@ foreach ( $dumpIterator as $jsonLine ) {
 					echo "Perfect match \n";
 
 			    #importing it into wikidata
-			if ($wbFactory->newRevisionGetter()->getFromId($line->id())->getContent()->getData()->getStatements()->getByPropertyId( PropertyId::newFromNumber( 1297 ) )->isEmpty()) {
+			if ($line->id() 
+			    && $wbFactory->newRevisionGetter()->getFromId($line->id())->getContent()->getData()->getStatements()->getByPropertyId( PropertyId::newFromNumber( 1297 ) )->isEmpty()) {
 
-			    $gov_id = substr($ans['gov_id'], 3, 2) . "-" . substr($ans['gov_id'], -7);
-			    echo "Adding '" . $gov_id . "' to the entity '". $line->name() ."' \n";
-			    $wbFactory->newStatementCreator()->create(
-				new PropertyValueSnak(
-				    PropertyId::newFromNumber( 1297 ),
-				    new StringValue( $gov_id )
-				),
-				$line->id()
-			    );
-			}
+	    		    $gov_id = substr($ans['gov_id'], 3, 2) . "-" . substr($ans['gov_id'], -7);
+	    		    echo "Adding '" . $gov_id . "' to the entity '". $line->name() ."' \n";
+	    		    $wbFactory->newStatementCreator()->create(
+	    			new PropertyValueSnak(
+	    			    PropertyId::newFromNumber( 1297 ),
+	    			    new StringValue( $gov_id )
+	    			),
+	    			$line->id()
+	    		    );
+	    		}
 			} else if (sizeof($res) == 1)  {
 					echo "Bad match \n ";
 			}

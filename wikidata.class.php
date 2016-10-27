@@ -27,10 +27,10 @@ class Wikidata {
 	}
 
 	public function id() {
-		if (isset($this->data['id'])) {
+		if (isset($this->data['id']) && is_string($this->data['id'])) {
 			return $this->data['id'];
 		} else {
-			return "";
+			return false;
 		}
 	}
 
