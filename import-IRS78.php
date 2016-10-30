@@ -78,7 +78,7 @@ foreach ( $dumpIterator as $jsonLine ) {
 
                     #importing it into wikidata
                     try {
-                        if ($line->id() 
+                        if (is_string($line->id())
                             && $wbFactory->newRevisionGetter()->getFromId($line->id())->getContent()->getData()->getStatements()->getByPropertyId( PropertyId::newFromNumber( 1297 ) )->isEmpty()) {
 
                                 $gov_id = substr($ans['gov_id'], 3, 2) . "-" . substr($ans['gov_id'], -7);
@@ -91,7 +91,7 @@ foreach ( $dumpIterator as $jsonLine ) {
                                 $line->id()
                                 );
                          }
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         echo 'Caught exception when adding to Wikidata: ',  $e->getMessage(), "\n";
                     }
                 } else if (sizeof($res) == 1)  {
