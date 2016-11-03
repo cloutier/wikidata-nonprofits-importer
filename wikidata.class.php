@@ -41,6 +41,17 @@ class Wikidata {
 			return "";
 		}
 	}
+
+	public function aliases($lang = "en") {
+		if (isset($this->data['aliases'][$lang])) {
+			$res = [];
+			foreach ($this->data['aliases'][$lang] as $alias)
+				$res[] = $alias["value"];
+			return $res;
+		} else {
+			return [];
+		}
+	}
 	
 	public function description ($lang = "en") {
 		if (isset($this->data['descriptions'][$lang])) {
