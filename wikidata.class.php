@@ -91,4 +91,13 @@ class Wikidata {
 
 		return false;
 	}
+	
+	public function nbrArticles() {
+		if (isset($this->data['sitelinks'])) {
+			return count($this->data['sitelinks']);
+		} else {
+			return 0;
+		}
+	}
 }
+
