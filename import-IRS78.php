@@ -29,8 +29,15 @@ use DataValues\Serializers\DataValueSerializer;
 use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikibase\DataModel\Entity\PropertyId;
 
+# Download dump if doesn't already exists
+if (!file_exists("/tmp/wikidata.json.bz2")) {
+	echo "Downloading wikidata dump. \n";	
+	#die();	
+	file_put_contents("/tmp/wikidata.json.bz2", fopen("https://dumps.wikimedia.org/wikidatawiki/entities/latest-all.json.bz2", 'r'));
+}
+
 $factory = new JsonDumpFactory();
-$dumpReader = $factory->newExtractedDumpReader( '/mnt/data/wikidata-20160926-uncompressed.json' );
+$dumpReader = $factory->newBz2DumpReader( '/tmp/wikidata.json.bz2' );
 $dumpIterator = $factory->newStringDumpIterator( $dumpReader );
 $api = new \Mediawiki\Api\MediawikiApi( "https://www.wikidata.org/w/api.php" );
 $api->login( new \Mediawiki\Api\ApiUser( $wikiUser, $wikiPassword ) );
@@ -43,18 +50,12 @@ $wbFactory = new \Wikibase\Api\WikibaseFactory(
     new DataValues\Deserializers\DataValueDeserializer( $dataValueClasses ),
     new DataValues\Serializers\DataValueSerializer()
 );
-$db = new PDO('mysql:host=127.0.0.1;dbname=fondations', 'root', 'root12345', array(
+$db = new PDO("mysql:host=" . $mysql["host"] . ';dbname=' . $mysql["db"] . '', $mysql["user"], $mysql["password"], array(
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
 ));
 
 
-# Download dump if doesn't already exists
-if (!file_exists("/mnt/data/wikidata-20160926-uncompressed.json")) {
-	echo "Downloading wikidata dump. \n";	
-	die();	
-	file_put_contents("dump.json.bz2", fopen("https://dumps.wikimedia.org/wikidatawiki/entities/latest-all.json.bz2", 'r'));
-}
 
 
 foreach ( $dumpIterator as $jsonLine ) {
@@ -99,7 +100,9 @@ foreach ( $dumpIterator as $jsonLine ) {
                     try {
                         if (is_string($line->id())
                             && $wbFactory->newRevisionGetter()->getFromId($line->id())->getContent()->getData()->getStatements()->getByPropertyId( PropertyId::newFromNumber( 1297 ) )->isEmpty()) {
+                                echo "would be added \n ";
 
+                                continue;
                                 $gov_id = substr($ans['gov_id'], 3, 2) . "-" . substr($ans['gov_id'], -7);
                                 echo "Adding '" . $gov_id . "' to the entity '". $line->name() ."' \n";
                                 $wbFactory->newStatementCreator()->create(
@@ -109,7 +112,9 @@ foreach ( $dumpIterator as $jsonLine ) {
                                 ),
                                 $line->id()
                                 );
-                         }
+                         } else {
+                            echo "already a link in wikidata for this \n";
+                        }
                     } catch (Throwable $e) {
                         echo 'Caught exception when adding to Wikidata: ',  $e->getMessage(), "\n";
                     }

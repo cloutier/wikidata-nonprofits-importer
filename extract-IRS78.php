@@ -18,8 +18,15 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+include_once 'credentials.php';
+
 error_reporting(E_ALL);
 set_time_limit(0);
+
+$db = new PDO("mysql:host=" . $mysql["host"] . ';dbname=' . $mysql["db"] . '', $mysql["user"], $mysql["password"], array(
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+));
 
 // We start by getting a data zip file from the Governement
 $dataURL = "https://apps.irs.gov/pub/epostcard/data-download-pub78.zip";
@@ -61,10 +68,6 @@ if (sizeof(explode("|", $rows[0])) != 6) {
 }
 echo "\n \n";
 
-$db = new PDO('mysql:host=127.0.0.1;dbname=foundations;port=3305', 'root', 'root12345', array(
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-));
 
 $i = 0;
 foreach ($rows AS $row) {
